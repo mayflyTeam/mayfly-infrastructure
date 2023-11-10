@@ -1,5 +1,5 @@
 {
-  "app": "node bin/ec2empty.js",
+  "app": "node bin/mayfly.js",
   "watch": {
     "include": [
       "**"

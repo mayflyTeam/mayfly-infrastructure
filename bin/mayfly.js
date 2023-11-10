@@ -1,10 +1,10 @@
 #!/usr/bin/env node
 
 const cdk = require('aws-cdk-lib');
-const { Ec2EmptyStack } = require('../lib/ec2empty-stack');
+const { MayFlyStack } = require('../lib/mayfly-stack');
 
 const app = new cdk.App();
-new Ec2EmptyStack(app, 'Ec2EmptyStack', {
+new MayFlyStack(app, 'MayFlyStack', {
   /* If you don't specify 'env', this stack will be environment-agnostic.
    * Account/Region-dependent features and context lookups will not work,
    * but a single synthesized template can be deployed anywhere. */
