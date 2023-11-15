@@ -1,0 +1,16 @@
+cluster_domain = "taishan.website"
+
+[nats]
+hosts = ["54.227.91.249"]
+
+[agent]
+ip = { api = "http://ip-api:8080/" }
+
+[agent.docker]
+network = "plane"
+connection = { socket = "/var/run/docker.sock" }
+
+[proxy]
+bind_ip = "0.0.0.0"
+http_port = 8080
+allow_path_routing = false
