@@ -14,10 +14,11 @@ provider "aws" {
 }
 
 locals {
-  drone_data      = jsondecode(file("${path.module}/../../packer/controller/controller-ami.json"))
-  controller_data = jsondecode(file("${path.module}/../../packer/drone/drone-ami.json"))
+  controller_data = jsondecode(file("${path.module}/../../packer/controller/controller-ami.json"))
+  drone_data      = jsondecode(file("${path.module}/../../packer/drone/drone-ami.json"))
   drone_ami       = local.drone_data.builds[length(local.drone_data.builds) - 1].artifact_id
   controller_ami  = local.controller_data.builds[length(local.controller_data.builds) - 1].artifact_id
+  drone_conf = "drone-conf-${uuid()}"
 }
 
 resource "aws_security_group" "controller_sg" {
@@ -124,6 +125,7 @@ resource "aws_instance" "controller" {
                 sleep 5
                 docker_pulls=$(docker ps -a | grep 'Up .* seconds' | wc -l) 
               done
+              sudo systemctl stop systemd-resolved
               docker compose up -d
               cd /home/ubuntu/mayfly-api
               node api.js
@@ -137,7 +139,7 @@ data "terraform_remote_state" "elasticIP" {
   backend = "local"
 
   config = {
-    path = "../elasitcIP/terraform.tfstate"
+    path = "../elasticIP/terraform.tfstate"
   }
 }
 
@@ -147,7 +149,7 @@ resource "aws_eip_association" "controller" {
 }
 
 resource "aws_launch_configuration" "drone_conf" {
-  name            = "drone_config"
+  name            = local.drone_conf
   image_id        = split(":", local.drone_ami)[1]
   instance_type   = "t2.micro"
   security_groups = [aws_security_group.drone_sg.id]
@@ -180,7 +182,7 @@ data "aws_subnets" "default" {
   }
 }
 
-resource "aws_autoscaling_group" "example" {
+resource "aws_autoscaling_group" "drone-asg" {
   launch_configuration = aws_launch_configuration.drone_conf.id
   min_size             = 1
   max_size             = 3
