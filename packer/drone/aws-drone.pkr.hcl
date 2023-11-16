@@ -7,8 +7,12 @@ packer {
   }
 }
 
+locals {
+  ami_name = "mayfly-drone-${uuidv4()}"
+}
+
 source "amazon-ebs" "drone" {
-  ami_name      = "mayfly-drone"
+  ami_name      = local.ami_name
   instance_type = "t2.micro"
   region        = "us-east-1"
   source_ami    = "ami-0c8dfd6b207aecadf"

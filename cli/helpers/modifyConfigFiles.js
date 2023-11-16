@@ -7,8 +7,8 @@ const readline = require('readline');
 const readFile = util.promisify(fs.readFile);
 const writeFile = util.promisify(fs.writeFile);
 
-const controllerConfigPath = '../../packer/controller-config/plane-config/controller.toml';
-const droneConfigPath = '../../packer/drone-config/plane-config/drone.toml';
+const controllerConfigPath = '../../packer/controller/controller-config/plane-config/controller.toml';
+const droneConfigPath = '../../packer/drone/drone-config/plane-config/drone.toml';
 
 const question = (rl, query) => new Promise(resolve => rl.question(query, resolve));
 
@@ -35,7 +35,7 @@ const modifyConfigFiles = async () => {
     const droneData = await readFile(droneConfigPath, 'utf-8');
     let droneConfig = toml.parse(droneData);
 
-    const tfState = JSON.parse(fs.readFileSync('./elasticIP/terraform.tfstate'));
+    const tfState = JSON.parse(fs.readFileSync('../../terraform/elasticIP/terraform.tfstate'));
     droneConfig.cluster_domain = domainName;
     droneConfig.nats.hosts = [tfState.outputs.eip_address.value];
 

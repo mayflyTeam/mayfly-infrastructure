@@ -1,12 +1,11 @@
 [nats]
-hosts = ["nats"]
-
-# An optional token is allowed for token authentication.
-# auth = { token = "my-secret-token" }
+hosts = [
+  "nats"
+]
 
 [scheduler]
 
 [dns]
-port = 53
+port = 53.0
 soa_email = "hickorystevens3@gmail.com"
 domain_name = "taishan.website"

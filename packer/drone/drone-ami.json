@@ -1,0 +1,41 @@
+{
+  "builds": [
+    {
+      "name": "drone",
+      "builder_type": "amazon-ebs",
+      "build_time": 1700153184,
+      "files": null,
+      "artifact_id": "us-east-1:ami-0ea919f8009ba1435",
+      "packer_run_uuid": "7d439be6-03fb-bfdd-d21a-80f8234de60e",
+      "custom_data": null
+    },
+    {
+      "name": "drone",
+      "builder_type": "amazon-ebs",
+      "build_time": 1700154830,
+      "files": null,
+      "artifact_id": "us-east-1:ami-023ba9ee6565ae192",
+      "packer_run_uuid": "e6207d5a-3a58-6218-c654-a24ce5ef70bb",
+      "custom_data": null
+    },
+    {
+      "name": "drone",
+      "builder_type": "amazon-ebs",
+      "build_time": 1700163619,
+      "files": null,
+      "artifact_id": "us-east-1:ami-0f607f0bf2f39afc8",
+      "packer_run_uuid": "548d4afd-9040-d738-fdb3-fcb4d76bf713",
+      "custom_data": null
+    },
+    {
+      "name": "drone",
+      "builder_type": "amazon-ebs",
+      "build_time": 1700165217,
+      "files": null,
+      "artifact_id": "us-east-1:ami-0504022aa9094e30c",
+      "packer_run_uuid": "58e6c975-d79b-b889-9219-137509ff9c32",
+      "custom_data": null
+    }
+  ],
+  "last_run_uuid": "58e6c975-d79b-b889-9219-137509ff9c32"
+}
