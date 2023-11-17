@@ -9,16 +9,22 @@ terraform {
   required_version = ">= 1.2.0"
 }
 
-provider "aws" {
-  region = "us-east-1"
-}
-
 locals {
   controller_data = jsondecode(file("${path.module}/../../packer/controller/controller-ami.json"))
   drone_data      = jsondecode(file("${path.module}/../../packer/drone/drone-ami.json"))
   drone_ami       = local.drone_data.builds[length(local.drone_data.builds) - 1].artifact_id
   controller_ami  = local.controller_data.builds[length(local.controller_data.builds) - 1].artifact_id
+  config_data = jsondecode(file("${path.module}/../../config.json"))
+  max_size = local.config_data.DRONE_ASG_MAX_SIZE
+  min_size = local.config_data.DRONE_ASG_MIN_SIZE
+  desired_capacity = local.config_data.DRONE_ASG_DESIRED_CAPACITY
+  region = local.config_data.AWS_REGION
+  instance_type = local.config_data.INSTANCE_TYPE
   drone_conf = "drone-conf-${uuid()}"
+}
+
+provider "aws" {
+  region = local.region
 }
 
 resource "aws_security_group" "controller_sg" {
@@ -111,7 +117,7 @@ resource "aws_security_group" "drone_sg" {
 
 resource "aws_instance" "controller" {
   ami                    = split(":", local.controller_ami)[1]
-  instance_type          = "t2.micro"
+  instance_type          = local.instance_type
   vpc_security_group_ids = [aws_security_group.controller_sg.id]
 
   user_data = <<-EOF
@@ -151,7 +157,7 @@ resource "aws_eip_association" "controller" {
 resource "aws_launch_configuration" "drone_conf" {
   name            = local.drone_conf
   image_id        = split(":", local.drone_ami)[1]
-  instance_type   = "t2.micro"
+  instance_type   = local.instance_type
   security_groups = [aws_security_group.drone_sg.id]
 
   user_data = <<-EOF
@@ -184,9 +190,9 @@ data "aws_subnets" "default" {
 
 resource "aws_autoscaling_group" "drone-asg" {
   launch_configuration = aws_launch_configuration.drone_conf.id
-  min_size             = 1
-  max_size             = 3
-  desired_capacity     = 1
+  min_size             = local.max_size
+  max_size             = local.min_size
+  desired_capacity     = local.desired_capacity
   vpc_zone_identifier  = data.aws_subnets.default.ids
 
   tag {

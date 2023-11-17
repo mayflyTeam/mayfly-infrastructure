@@ -9,8 +9,13 @@ terraform {
   required_version = ">= 1.2.0"
 }
 
+locals {
+  config_data = jsondecode(file("${path.module}/../../config.json"))
+  region = local.config_data.AWS_REGION
+}
+
 provider "aws" {
-  region = "us-east-1"
+  region = local.region
 }
 
 resource "aws_eip" "my_eip" {

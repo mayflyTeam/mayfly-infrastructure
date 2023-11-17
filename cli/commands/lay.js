@@ -1,15 +1,6 @@
 const fs = require('fs');
 const prompts = require('prompts');
 
-/**
-Things to customize:
-Instance Type
-Region
-Min Size
-Max Size
-Desired Capacity
- */
-
 const questions = [
   {
     type: 'text',
@@ -63,12 +54,8 @@ const lay = async () => {
   console.log('Initializing Mayfly', 'Set up your Mayfly deployment pipeline!\n');
 
   const answers = await prompts.prompt(questions);
-  const envContents = Object.keys(answers)
-    .filter((key) => answers[key])
-    .map((key) => `${key}=${answers[key]}`)
-    .join('\n');
 
-  fs.writeFileSync('.env', envContents);
+  fs.writeFileSync('../../config.json', JSON.stringify(answers));
 
   console.log('\n');
   console.log('Mayfly lay complete!');

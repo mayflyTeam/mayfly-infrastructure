@@ -9,12 +9,15 @@ packer {
 
 locals {
   ami_name = "mayfly-drone-${uuidv4()}"
+  config_data = jsondecode(file("${path.module}/../../config.json"))
+  region = local.config_data.AWS_REGION
+  instance_type = local.config_data.INSTANCE_TYPE
 }
 
 source "amazon-ebs" "drone" {
   ami_name      = local.ami_name
-  instance_type = "t2.micro"
-  region        = "us-east-1"
+  instance_type = local.instance_type
+  region        = local.region
   source_ami    = "ami-0c8dfd6b207aecadf"
   ssh_username  = "ubuntu"
 }
