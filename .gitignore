@@ -6,3 +6,4 @@ node_modules
 .git-coauthors
 config.json
 .env
+package-lock.json
